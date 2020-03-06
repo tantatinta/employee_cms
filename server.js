@@ -31,18 +31,18 @@ const chooseAction = () => {
             case "Add departments":
                 addDepartment();
             break;
-            // case "Add roles":
-
-            // break;
+            case "Add roles":
+                addRole();
+            break;
             // case "Add employees":
 
             // break;
             case "View departments":
                 viewDepartments();
             break;
-            // case "view roles":
-
-            // break;
+            case "view roles":
+                viewRoles();
+            break;
             // case "view employees":
 
             // break;
@@ -82,6 +82,57 @@ const addDepartment = () => {
 const viewDepartments = () => {
     connection.query(
         "SELECT * FROM departments", (err, res) => {
+            if (err) return console.log(err);
+            console.table(res);
+            chooseAction();
+        }
+    )
+}
+
+const addRole = () => {
+    connection.query("SELECT * FROM departments", (err, res) => {
+        if (err) console.log(err)
+    
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "What is the title of the role that you want to add?"
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the salary for that role?"
+        },
+        {
+            type: "rawlist",
+            name: "department_id",
+            message: "What department does this role belong to?",
+            choices: res.map((department) => {
+                return {name: department.name, value: department.id}
+            })
+        }
+    ]).then((answer) => {
+        connection.query(
+            "INSERT INTO roles SET ?",
+            {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.department_id
+            }, (err, res) => {
+                if (err) return console.log(err);
+                console.log("Your role " + answer.title + " has been added.")
+                chooseAction();
+            }
+        );
+        console.log(answer)
+    });
+  });
+}
+
+const viewRoles = () => {
+    connection.query(
+        "SELECT * FROM roles", (err, res) => {
             if (err) return console.log(err);
             console.table(res);
             chooseAction();

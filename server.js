@@ -29,7 +29,7 @@ const chooseAction = () => {
     ]).then((answer) => {
         switch (answer.action) {
             case "Add departments":
-
+                addDepartment();
             break;
             // case "Add roles":
 
@@ -37,9 +37,9 @@ const chooseAction = () => {
             // case "Add employees":
 
             // break;
-            // case "View departments":
-
-            // break;
+            case "View departments":
+                viewDepartments();
+            break;
             // case "view roles":
 
             // break;
@@ -57,6 +57,37 @@ const chooseAction = () => {
 };
 
 start();
+
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "What is the name of the department that you want to add?"
+        }
+    ]).then((answer) => {
+        connection.query(
+            "INSERT INTO departments SET ?",
+            {
+                name: answer.name
+            }, (err, res) => {
+                if (err) return console.log(err);
+                console.log("Your department " + answer.name + " has been added.")
+                chooseAction();
+            }
+        )
+    })
+}
+
+const viewDepartments = () => {
+    connection.query(
+        "SELECT * FROM departments", (err, res) => {
+            if (err) return console.log(err);
+            console.table(res);
+            chooseAction();
+        }
+    )
+}
 
 const exit = () =>{
     connection.end();

@@ -1,0 +1,25 @@
+{
+  "name": "employee_cms",
+  "version": "1.0.0",
+  "description": "Command-line app to track employees",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tantatinta/employee_cms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tantatinta/employee_cms/issues"
+  },
+  "homepage": "https://github.com/tantatinta/employee_cms#readme",
+  "dependencies": {
+    "inquirer": "^7.0.6",
+    "mysql": "^2.18.1"
+  }
+}

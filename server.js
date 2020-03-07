@@ -10,13 +10,15 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 
+
+
 const start = () => {
     connection.connect(function (err) {
         if (err) throw err;
         chooseAction();
 
     });
-}
+};
 
 const chooseAction = () => {
     inquirer.prompt([
@@ -46,9 +48,9 @@ const chooseAction = () => {
             case "view employees":
                 viewEmployees();
             break;
-            // case "Update employee roles":
-
-            // break;
+            case "Update employee roles":
+                updateEmployeeRoles();
+            break;
             default:
                 exit();
 
@@ -56,7 +58,50 @@ const chooseAction = () => {
     })
 };
 
-start();
+// const updateEmployeeRoles = () => {
+//     connection.query("SELECT * FROM employees", function (err, empRes) {
+//         if (err) console.log(err)
+//         const employeeArr = empRes.map(( {id, first_name, last_name}) => {
+//             return {name: `${first_name}, ${last_name}`, value: id}
+//         })
+//         connection.query("SELECT * FROM roles", (err, rolesRes) => {
+//             if (err) console.log(err)
+//             const rolesArr = rolesRes.map(( {value: id, name: title}) => {
+//                 inquirer.prompt([
+//                     {
+//                         type: "list",
+//                         name: "id",
+//                         message: "What is the employee's name that you want to update?",
+//                         choices: employeeArr
+//                     },
+//                     {
+//                         type: "list",
+//                         name: "roleId",
+//                         message: "What is the new role for this employee",
+//                         choices: rolesArr
+//                     }
+//                 ]).then(answers, () => {
+//                     connection.query("UPDATE employees SER role_id = ? WHERE id = ?",
+//                     [
+//                         answers.roleId,
+//                         answers.id
+//                     ],
+
+//                     function(err, res) {
+//                         if (err) console.log(err);
+                    
+//                         chooseAction();
+//                     }
+                    
+//                     )
+//                 });
+//             })
+        
+        
+        
+//         });
+//     });
+// };
 
 const addEmployee = () => {
     connection.query("SELECT * FROM roles", (err, rolesRes) => {
@@ -65,7 +110,7 @@ const addEmployee = () => {
             
             if (err) console.log(err)
 
-            let listEmp =  employeesRes.map((employee) => {
+            let listEmp = employeesRes.map((employee) => {
                 return { 
                     name: `${employee.first_name} ${employee.last_name}`, value: employee.id 
                 }
@@ -124,7 +169,7 @@ const viewEmployees = () => {
             chooseAction();
         }
     )
-}
+};
 
 const addDepartment = () => {
     inquirer.prompt([
@@ -145,17 +190,17 @@ const addDepartment = () => {
             }
         )
     })
-}
+};
 
 const viewDepartments = () => {
     connection.query(
-        "SELECT * FROM departments", (err, res) => {
+        "SELECT departments.name AS department FROM departments", (err, res) => {
             if (err) return console.log(err);
             console.table(res);
             chooseAction();
         }
     )
-}
+};
 
 const addRole = () => {
     connection.query("SELECT * FROM departments", (err, res) => {
@@ -196,18 +241,20 @@ const addRole = () => {
             console.log(answer)
         });
     });
-}
+};
 
 const viewRoles = () => {
     connection.query(
-        "SELECT * FROM roles", (err, res) => {
+        "SELECT roles.title, roles.salary, departments.name AS department FROM roles INNER JOIN departments ON roles.department_id = departments.id", (err, res) => {
             if (err) return console.log(err);
             console.table(res);
             chooseAction();
         }
     )
-}
+};
 
 const exit = () => {
     connection.end();
-}
+};
+
+start();

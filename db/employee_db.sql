@@ -22,3 +22,7 @@ CREATE TABLE employees (
   role_id INT NOT NULL,
   manager_id INT
 );
+SELECT fields
+FROM tableA A
+INNER JOIN tableB B
+ON a.key = b.key
